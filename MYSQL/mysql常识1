@@ -5,3 +5,9 @@
 数据控制语言（DCL）：GRANT(赋予用户权限） REVOKE(收回权限） DENY(禁止权限)
 事务控制语言（TCL）：SAVEPOINT (设置保存点）ROLLBACK (回滚) COMMIT(提交)
 
+二.内外链接区别，联合查询区别，日期函数，窗口函数
+内外连接：https://blog.csdn.net/johnhan9/article/details/88686288
+联合查询区别：https://blog.csdn.net/weixin_39411321/article/details/90602030?
+日期函数1：https://blog.csdn.net/m0_37560711/article/details/79407117?
+日期函数2：https://blog.csdn.net/weixin_34387468/article/details/93183263?（SQLServer 日期函数大全）
+窗口函数：https://zhuanlan.zhihu.com/p/138282683
