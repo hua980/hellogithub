@@ -18,7 +18,7 @@ MYSQL知识学习链接：https://www.begtut.com/mysql/mysql-force-index.html
 
 mysql中常用的三种插入数据的语句: 
 insert into表示插入数据，数据库会检查主键，如果出现重复会报错； 
-replace into表示插入替换数据，需求表中有PrimaryKey，
+replace into表示插入替换数据，需求表中有PrimaryKey，(这里直接是replace into 不用换加insert)
             或者unique索引，如果数据库已经存在数据，则用新数据替换，如果没有数据效果则和insert into一样； 
 insert ignore表示，如果中已经存在相同的记录，则忽略当前新数据；
 insert ignore into actor values("3","ED","CHASE","2006-02-15 12:34:33");
@@ -52,6 +52,25 @@ where id not in
         group by emp_no
     ) as T1
 )
+
+更新数据
+UPDATE titles_test
+SET to_date = NULL, from_date = '2001-01-01'
+WHERE to_date = '9999-01-01';
+
+修改数据
+1. 修改表名
+    alter table 表名 rename to 新的表名;
+2. 修改表的字符集
+    alter table 表名 character set 字符集名称;
+3. 添加一列
+    alter table 表名 add 列名 数据类型;
+4. 修改列名称 类型
+    alter table 表名 change 列名 新列别 新数据类型;
+    alter table 表名 modify 列名 新数据类型;
+5. 删除列
+    alter table 表名 drop 列名;
+
 
 
 四.MySQL中四种方式给字段添加索引
