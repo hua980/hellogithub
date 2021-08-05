@@ -63,6 +63,14 @@ FROM emp_bonus eb,salaries s,employees e
     and s.emp_no=e.emp_no 
     and s.to_date='9999-01-01'
     
-
+统计正常用户发送给正常用户邮件失败的概率(其中round(X,3)指X保留三位小数）
+SELECT a.date, round(sum(case when a.type="no_completed" then 1  else 0 end)/count(*),3) 
+或者
+SELECT a.date, round(sum(a.type="no_completed")/count(*),3) as f from
+  (select * FROM email
+  WHERE send_id in(select id from user where is_blacklist=0)
+  and receive_id IN(select id from user where is_blacklist=0))a
+GROUP by a.date
+ORDER by date
 
 
