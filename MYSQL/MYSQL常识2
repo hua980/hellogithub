@@ -1,1 +1,68 @@
-dfd
+一.创建外键约束
+在audit表上创建外键约束，其emp_no对应employees_test表的主键id
+ALTER TABLE audit
+ADD CONSTRAINT FOREIGN KEY (emp_no)
+REFERENCES employees_test(id);
+
+二.求字符串个数
+查找字符串'10,A,B' 中逗号','出现的次数cnt。
+思路：
+把串 "10,A,B" 中的 逗号用空串替代， 变成了 "10AB"
+然后原来串的长度 - 替换之后的串的长度 就是 被替换的 逗号的个数
+select 
+  (
+  length("10,A,B") - length(replace("10,A,B",",",""))
+  )
+as cnt;
+
+三.截取字符串
+三种方法都可以用
+LEFT(s,n)返回字符串 s 的前 n 个字符
+RIGHT(s,n)返回字符串 s 的后 n 个字符
+第一种：（right）
+select first_name
+from employees
+order by right(first_name,2)
+
+第二种：（substr）
+select first_name from employees  order by substr(first_name,-2)
+
+第三种：（substring）
+select first_name from employees  order by substring(first_name,-2)
+
+三.聚合函数group_concat
+group_concat（）函数将group by产生的同一个分组中的值连接起来，返回一个字符串结果。
+group_concat( [distinct] 要连接的字段 [order by 排序字段 asc/desc ] [separator '分隔符'] )
+注意：当数据太大，group_concat超出了默认值1024，超过就会截断，group_concat查询出来的数据就会不全。
+
+select dept_no, group_concat(emp_no) as employees
+from dept_emp
+group by dept_no
+
+四.LIMIT 分页查询employees表
+SELECT *
+FROM employees
+LIMIT 5,5
+
+LIMIT 语句结构： LIMIT X,Y 
+Y ：返回几条记录
+X：从第几条记录开始返回（第一条记录序号为0，默认为0）
+
+五.条件判断语句
+给出emp_no、first_name、last_name、奖金类型btype、对应的当前薪水情况salary以及奖金金额bonus
+bonus类型btype为1其奖金为薪水salary的10%，btype为2其奖金为薪水的20%，其他类型均为薪水的30%
+当前薪水表示to_date='9999-01-01'
+
+select s.emp_no,e.first_name,e.last_name,eb.btype,s.salary,
+    case when eb.btype=1 then s.salary*0.1
+    when eb.btype=2 then s.salary*0.2
+    else s.salary*0.3
+    end as bonus
+FROM emp_bonus eb,salaries s,employees e
+    where eb.emp_no=s.emp_no 
+    and s.emp_no=e.emp_no 
+    and s.to_date='9999-01-01'
+    
+
+
+
