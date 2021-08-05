@@ -41,6 +41,18 @@ from actor
 alter table actor
 add create_date datetime not null default "2020-10-01 00:00:00";
 
+删除数据（这里是删除emp_no重复的记录，只保留最小的id对应的记录）
+delete from titles_test
+where id not in
+(
+    select * from
+    (
+        select min(id)
+        from titles_test
+        group by emp_no
+    ) as T1
+)
+
 
 四.MySQL中四种方式给字段添加索引
 1.添加主键
