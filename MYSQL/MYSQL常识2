@@ -73,7 +73,30 @@ SELECT a.date, round(sum(a.type="no_completed")/count(*),3) as f from
 GROUP by a.date
 ORDER by date
 
+六.窗口函数的使用
+牛客每天有很多人登录，请你统计一下牛客每个用户最近登录是哪一天，用的是什么设备.
+SELECT u.name,c.name,re.date FROM 
+    (SELECT user_id,client_id,date FROM
+      (
+          select user_id,date,client_id,rank() over(partition by user_id order by date desc) nk
+          FROM login
+      ) a
+    WHERE a.nk=1
+    ORDER by a.user_id) re
+left join user u
+ON re.user_id=u.id
+left JOIN client c
+ON re.client_id=c.id
+order by u.name
 
+# select user.name as u_n, client.name as c_n,
+# login.date
+# from login 
+# join user on login.user_id=user.id
+# join client on login.client_id=client.id
+# where (login.user_id,login.date) in
+# (select user_id,max(date) from login group by login.user_id )
+# order by user.name;
 
 
 
