@@ -98,6 +98,46 @@ order by u.name
 # (select user_id,max(date) from login group by login.user_id )
 # order by user.name;
 
+七.留存率的计算
+1.（SQL 68）查询新登录用户次日成功的留存率
+
+总用户数量
+select count(distinct user_id) from login
+每个用户第一天登陆的日子（即为新用户）
+select user_id,min(date) from login group by user_id
+后一天登录还登录的新用户
+SELECT user_id, DATE_ADD(MIN(date),INTERVAL 1 DAY) FROM login GROUP BY user_id
+MySQL解法：
+SELECT
+  ROUND(COUNT(DISTINCT user_id)*1.0 / (SELECT COUNT(DISTINCT user_id) FROM login), 3)
+  FROM login
+  WHERE (user_id, date)
+  IN
+  (SELECT user_id, DATE_ADD(MIN(date),INTERVAL 1 DAY) FROM login GROUP BY user_id);
+  
+2.统计每个日期登录新用户个数
+select distinct date
+        ,sum(case when (user_id,date) in 
+    (select user_id,min(date)from login group by user_id)
+    then 1 else 0 end)
+from login
+group by date
+order by date;
+
+3.统计每个日期新用户的次日留存率
+select date
+        ,ifnull(round((sum(case when (user_id,date)in
+            (select user_id,date_add(date,interval -1 day)
+             from login group by user_id)
+            then 1 else 0 end))/
+        (sum(case when (user_id,date)in
+            (select user_id,min(date)from login group by user_id)
+            then 1 else 0 end)),3),0)as p
+from login
+group by date
+order by date;
+
+
 
 
 
