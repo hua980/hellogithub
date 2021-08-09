@@ -1,0 +1,37 @@
+一.求中位数（奇数就是中间那个数，偶数就是中间两个数的平均）
+select job,
+    floor((count(*)+1)/2) as "start",
+    (floor((count(*)+2)/2)) as "end"
+from grade
+GROUP by job
+order by job
+
+二.时间比较，如果是date类型，直接比较
+select * from order_info
+where date > '2025-10-15'
+and product_name in ('C++','Java','Python')
+and status='completed'
+order by id
+
+三.截取日期中的年份
+select job,sum(num) as cnt from resume_info
+where year(date)='2025'
+group by job
+order by cnt desc
+
+四.中位数
+当某一数的正序和逆序累计均大于整个序列的数字个数的一半即为中位数
+select grade
+from
+    (select grade,
+    (select sum(number) from class_grade) as total,
+    sum(number)over(order by grade) a, -- 求正序
+    sum(number)over(order by grade desc) b  -- 求逆序
+     from class_grade
+    order by grade)t
+where a >= total/2 and b >= total/2  -- 正序逆序均大于整个数列数字个数的一半
+order by grade;
+
+
+
+
