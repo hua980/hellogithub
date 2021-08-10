@@ -55,6 +55,7 @@ SELECT substring(‘hello world’,-5);
 在源字符串的右边填充给定的字符padstr到指定的长度len，返回填充后的字符串
 例13：SELECT rpad(‘hi’,5,’?’);
 
+
 11、TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] str), TRIM([remstr FROM] str)
 从源字符串str中去掉两端、前缀或后缀字符remstr并返回。如果不指定remstr，则去掉str两端的空格。
 不指定BOTH、LEADING(左)、TRAILING(右) ，则默认为 BOTH
