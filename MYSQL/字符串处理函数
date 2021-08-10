@@ -1,0 +1,116 @@
+参考：https://blog.csdn.net/weixin_42373127/article/details/88991807
+
+字符串函数
+1、LOWER(column|str)
+将字符串参数值转换为全小写字母后返回
+例1： SELECT lower(‘SQL Course’) ;
+
+2、UPPER(column|str)
+将字符串参数值转换为全大写字母后返回
+例2： SELECT upper(‘SQL Course’) ;
+
+3、CONCAT(column|str1, column|str2,…)
+将多个字符串参数首尾相连后返回
+例3： SELECT concat(‘My’, ‘S’, ‘QL’);
+
+注意：如果有任何参数为null，则函数返回null
+例4： SELECT concat(‘My’, NULL, ‘QL’);
+
+如果参数是数字，则自动转换为字符串
+例5：SELECT concat(14.3);
+
+4、CONCAT_WS(separator,str1,str2,…)
+将多个字符串参数以给定的分隔符separator首尾相连后返回
+例6： SELECT concat_ws(’,’,‘First name’,‘Second name’,‘Last Name’);
+
+注意：如果有任何参数为null，则函数不返回null，而是直接忽略它
+例7： SELECT concat_ws(’,’,‘First name’,NULL,‘Last Name’);
+
+5、SUBSTR(str,pos[,len])
+从源字符串str中的指定位置pos开始取一个字串并返回。len指定子串的长度，
+如果省略则一直取到字符串的末尾。该函数是函数SUBSTRING()的同义词。len为负值表示从源字符串的尾部开始取起
+例8：SELECT substring(‘hello world’,5);
+
+SELECT substring(‘hello world’,5,3);
+
+SELECT substring(‘hello world’,-5);
+
+6、LENGTH(str)：
+返回字符串的存储长度
+例9：SELECT length(‘text’),length(‘你好’);
+
+7、CHAR_LENGTH(str)：
+返回字符串中的字符个数
+例10：SELECT char_length(‘text’),char_length(‘你好’);
+
+8、INSTR(str, substr)
+从源字符串str中返回子串substr第一次出现的位置
+例11：SELECT instr(‘foobarbar’, ‘bar’);
+
+9、LPAD(str, len, padstr)：
+在源字符串的左边填充给定的字符padstr到指定的长度len，返回填充后的字符串
+例12：SELECT lpad(‘hi’,4,‘??’);
+
+10、RPAD(str, len, padstr)
+在源字符串的右边填充给定的字符padstr到指定的长度len，返回填充后的字符串
+例13：SELECT rpad(‘hi’,5,’?’);
+
+11、TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] str), TRIM([remstr FROM] str)
+从源字符串str中去掉两端、前缀或后缀字符remstr并返回。如果不指定remstr，则去掉str两端的空格。
+不指定BOTH、LEADING(左)、TRAILING(右) ，则默认为 BOTH
+例14：SELECT trim(’ bar ‘) ;
+
+SELECT trim(LEADING ‘x’ FROM ‘xxxbarxxx’);
+
+SELECT trim(BOTH ‘x’ FROM ‘xxxbarxxx’);
+
+SELECT trim(TRAILING ‘xyz’ FROM ‘barxxyz’);
+
+
+12、REPLACE(str, from_str, to_str)：
+在源字符串str中查找所有的子串form_str（大小写敏感），找到后使用替代字符串to_str替换它。返回替换后的字符串
+例15：SELECT replace(‘www.mysql.com’, ‘w’, ‘Ww’);
+
+13、LTRIM(str)，RTRIM(str)
+去掉字符串的左边或右边的空格
+例16：SELECT ltrim(’ barbar ‘) rs1, rtrim(’ barbar ') rs2;
+
+14、REPEAT(str, count)
+将字符串str重复count次后返回
+例17：SELECT repeat(‘MySQL’, 3);
+
+15、REVERSE(str)
+将字符串str反转后返回
+例18：SELECT reverse(‘abc’);
+
+
+16、CHAR(N,… [USING charset_name])
+它将每个参数N解释为整数（字符的编码），并返回每个整数对应的字符所构成的字符串。NULL值被忽略。
+例19：SELECT char(77,121,83,81,‘76’),char(77,77.3,‘77.3’);
+
+默认情况下，该函数返回二进制字符串。如果想返回针对特定字符集的字符串，使用using选项。
+例20：SELECT charset(char(0x65)), charset(char(0x65 USING utf8));
+
+17、FORMAT(X,D[,locale])：
+以格式‘#,###,###.##’格式化数字X。D指定小数位数。
+Locale指定国家语言，它决定了小数点和千分位分隔符的使用。默认的locale为’en_US‘
+例21：SELECT format(12332.123456, 4),format(12332.2,0);
+
+SELECT format(12332.2,2,‘de_DE’);
+
+18、SPACE(N)：
+返回由N个空格构成的字符串
+例22：SELECT space(6);
+
+19、LEFT(str, len)
+返回最左边的len长度的子串
+例23：SELECT left(‘foobarbar’, 5);
+
+20、RIGHTT(str, len)
+返回最右边的len长度的子串
+例24：SELECT right(‘foobarbar’, 4);
+
+21、STRCMP(expr1,expr2)
+如果两个字符串是一样的则返回0；如果第一个小于第二个则返回-1；否则返回1
+例25：SELECT strcmp(‘text’, ‘text2’),strcmp(‘text2’, ‘text’);
+SELECT strcmp(‘text’, ‘text’);
