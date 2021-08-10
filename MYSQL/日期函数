@@ -200,3 +200,31 @@ select convert_tz('2008-08-08 12:00:00', '+08:00', '+00:00'); -- 2008-08-08 04:0
 select date_add('2008-08-08 12:00:00', interval -8 hour); -- 2008-08-08 04:00:00
 select date_sub('2008-08-08 12:00:00', interval 8 hour); -- 2008-08-08 04:00:00
 select timestampadd(hour, -8, '2008-08-08 12:00:00'); -- 2008-08-08 04:00:00
+
+
+
+
+2.参考：https://blog.csdn.net/weixin_41761540/article/details/80733837
+
+一.mysql中，获取当前时间：
+1：now(); ：获取年月日时分秒
+2：curdate() ： 获取年月日
+
+二：mysql中获取当前日期
+
+1：返回日期date的星期索引(1=星期天，2=星期一, ……7=星期六)   dayofweek():
+
+2：返回date的星期索引(0=星期一，1=星期二, ……6= 星期天)。 WEEKDAY();
+
+3：返回date的月份中日期，在1到31范围内。  DAYOFMONTH()；
+
+4：返回date在一年中的日数, 在1到366范围内。DAYOFYEAR() ；
+
+5：返回date的月份，范围1到12。MONTH()；
+
+6：返回date的星期名字。  DAYNAME() ；
+
+7：返回date的月份名字。MONTHNAME()；
+
+8：返回date一年中的季度，范围1到4。  QUARTER() ；
+
