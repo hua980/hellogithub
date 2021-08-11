@@ -35,8 +35,12 @@
 
 3. 破解反爬虫机制的几种方法
 策略1：设置下载延迟，比如数字设置为5秒，越大越安全
+--可以通过settings.py中的DOWNLOAD_DELAY
+--DOWNLOAD_DELAY = 3
 
 策略2：禁止Cookie，某些网站会通过Cookie识别用户身份，禁用后使得服务器无法识别爬虫轨迹
+--可以通过settings.py中的COOKIES_ENABLED , 控制 CookiesMiddleware 开启或关闭
+--COOKIES_ENABLED = False
 
 策略3：使用user agent池。也就是每次发送的时候随机从池中选择不一样的浏览器头信息，防止暴露爬虫身份
 
