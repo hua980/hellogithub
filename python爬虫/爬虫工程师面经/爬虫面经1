@@ -1,0 +1,111 @@
+[爬虫面试] 总结一些爬虫工程师遇到的面试题（真实）
+参考：https://blog.csdn.net/sc_lilei/article/details/80192632
+NO.1 :列表生成式和生成器的区别 ？
+NO.2 :如何不用任何循环快速筛掉列表中的奇数元素 ？
+NO.3 :map和reduce的用法 ？
+这几个问题的答案作如下统一回答：
+        
+      #列表生成式
+      print list(range(11))
+      #列表生成式第二种写法
+      a = [x for x in range(11)]
+
+      #使用内置filter函数过滤列表a中不满足lambda函数的元素，即过滤掉奇数，留下偶数
+      print filter(lambda x: x%2==0 , a)  #[0, 2, 4, 6, 8, 10]
+
+      '''
+      列表生成式直接生成一个列表，所有元素对象被立即创建在内存中，当元素过多时，势必会占用过多内存，
+      不可取，要用到生成器，它即时创建一个生成器对象，未创建任何元素
+      '''
+      #生成器来生成一个列表，它不会立即创建大量的对象在内存中
+      b = (x for x in range(11))
+
+      #生成器的缺点，没有列表的方法，如append、len、index等等
+      #print len(b)   #抛出异常，生成器没有__len__属性，查看不了列表长度
+
+      #通过next方法来访问其元素
+      print b.next(),b.next()  #0 1
+
+      #可通过循环打印出所有的元素
+      for i in b:print i
+
+      '''
+      第二种生成器写法，使用yield：迭代器 封装于函数内
+      '''
+      def generator_(n):
+          for i in range(n):
+              yield i
+      #此时这个函数已经是一个生成器了
+      print generator_(11).next()
+
+      #使用内置函数filter配合匿名函数过滤掉数组中不符合条件的元素
+      print filter(lambda x:x%2 ==0, [1,2,3,4,5]) #[2,4]
+      #也可以把以下函数作为第一个参数传入
+      def get_2(n):
+          return n%2==0
+      print filter(get_2, [1,2,3,4,5]) #[2,4]
+      '''
+      扩展；
+      可以直接作用于for循环的数据类型有以下几种： 
+      一类是集合数据类型，如list、tuple、dict、set、str等； 
+      一类是generator，包括生成器和带yield的generator function。 
+      这些可以直接作用于for循环的对象统称为可迭代对象：Iterable。 
+      可以使用isinstance()判断一个对象是否是Iterable对象：
+      '''
+
+      from collections import Iterable #这个是可迭代对象
+      for i in ['123',[],(1,),set(),{}]:
+          print isinstance(i,Iterable)  #都是true
+
+      from collections import Iterator #这个是迭代器
+
+      #可以被next()函数调用并不断返回下一个值的对象称为迭代器：Iterator
+      print isinstance((i for i in range(11)),Iterator)  #True
+
+      #用Iter函数把可迭代对象变成迭代器
+      print isinstance(iter('123'),Iterator)
+
+      # reversed将可迭代对象反转为一个迭代器
+      print  reversed([1,2,3]).next()
+
+      '''
+      高阶函数用法：reduce，map
+      '''
+      #map
+      #使用函数来处理序列中的元素 ：包含数字的元组、列表
+      res = map(lambda n:n*2, range(10))
+      print res  #[0, 2, 4, 6...
+
+      #可以接收2个数序列,生成一个列表
+      print map(lambda x,y:(x,y) , [1,2,3],[4,5,6]) #[(1, 4), (2, 5), (3, 6)]
+
+      #reduce
+      #使用函数来累积处理序列中的元素,可实现阶乘、求数组内的数字和
+      print reduce(lambda x,y:x*y , [1,2,3,4])  #24
+      print reduce(lambda x,y:x+y , [1,2,3,4])  #10  ,sum([1,2,3])更快
+
+      print reduce(lambda x,y:x+y ,'123','123')  #123123
+      print reduce(lambda x,y:x+y , ['x','y','z'])  #xyz
+
+
+NO.4:  装饰器的作用 ？
+    答：装饰器本质上是一个Python函数，它可以让其他函数在不需要做任何代码变动的前提下增加额外功能，提高了代码的复用性。
+ 
+
+NO.5: 如何处理封IP的反爬 ？
+    答：因为网络上的免费代理平台可用的IP数量太少，所以自己写一个模块去抓取平台的IP来维护是没有什么意义的。我选择的是付费代理，通过使用平台的api在本地动态维护一个IP缓存池来供给分布式架构的爬虫节点使用。这个缓存池不需要做IP有效性验证，因为我的爬虫若下载某个Request彻底失败后会把这个Request重新放回Request队列，而且选择一个好的代理平台可以大大提高代理IP质量。我常用的是快代理。缓存池的IP被取走一个，池中的数量就减少一个，当数量少于M时，再从平台获取N个。（具体可查看我的 另一篇文章）
+
+NO.6: 如何处理验证码 ?
+    答：简单的验证码可以通过预处理（灰度、二值化、去除干燥点）验证码图片再使用tesseract库来识别；复杂一点的则接入付费平台识别。当然，如果这个目标网站的app端没有验证码的话，会优先通过app端爬取。
+
+
+NO.7: 说几个redis中的数据类型和命令
+    答：字符串、列表、set集合；set key 123,,,lpush key 1 2 3,,,sadd key 1 2 3
+
+
+NO.8: MySQL中的inner join和left join的区别 ？
+    答：INNER JOIN（内连接,或等值连接）：取得两个表中存在连接匹配关系的记录。 
+          LEFT JOIN（左连接）：取得左表（table1）完全记录，即是右表（table2）并无对应匹配记录。 
+          扩展：RIGHT JOIN（右连接）：与 LEFT JOIN 相反，取得右表（table2）完全记录，即是左表（table1）并无匹配对应记录。（可参考 菜鸟教程）
+          
+          
