@@ -1,0 +1,34 @@
+import requests
+from lxml import etree
+import base64
+from urllib import request
+# 指定要访问的url
+url = "http://jandan.net/ooxx"
+# 指定响应头
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+}
+page_text = requests.get(url=url, headers=headers).text
+tree = etree.HTML(page_text)
+imgCode_list = tree.xpath("//span[@class='img-hash']/text()")
+imgUrl_list = []
+for url in imgCode_list:
+    img_url = "http:" + base64.b64decode(url).decode()
+    imgUrl_list.append(img_url)
+
+for url in imgUrl_list:
+    filePath = url.split("/")[-1]
+    request.urlretrieve(url=url, filename=filePath)
+    print(filePath + "下载成功!")
+# 查看页面源码：发现所有图片的src值都是一样的。
+#简单观察会发现每张图片加载都是通过jandan_load_img(this)这个js函数实现的。
+#在该函数后面还有一个class值为img-hash的标签，里面存储的是一组hash值，该值就是加密后的img地址
+#加密就是通过js函数实现的，所以分析js函数，获知加密方式，然后进行解密。
+#通过抓包工具抓取起始url的数据包，在数据包中全局搜索js函数名（jandan_load_img），然后分析该函数实现加密的方式。
+#在该js函数中发现有一个方法调用，该方法就是加密方式，对该方法进行搜索
+#搜索到的方法中会发现base64和md5等字样，md5是不可逆的所以优先考虑使用base64解密
+#print(page_text)
+
+
+#在抓包工具的数据包响应对象对应的页面中进行xpath的编写，而不是在浏览器页面中。
+#获取了加密的图片url数据
