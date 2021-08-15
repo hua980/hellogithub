@@ -1,0 +1,77 @@
+参考：https://www.cnblogs.com/chenxiaohan/p/7654667.html
+
+正文
+方法一：直接使用已知的cookie访问
+特点：
+　　简单，但需要先在浏览器登录
+
+原理：
+　简单地说，cookie保存在发起请求的客户端中，服务器利用cookie来区分不同的客户端。因为http是一种无状态的连接，当服务器一下子收到好几个请求时，
+  是无法判断出哪些请求是同一个客户端发起的。而“访问登录后才能看到的页面”这一行为，恰恰需要客户端向服务器证明：“我是刚才登录过的那个客户端”。
+  于是就需要cookie来标识客户端的身份，以存储它的信息（如登录状态）。
+
+　当然，这也意味着，只要得到了别的客户端的cookie，我们就可以假冒成它来和服务器对话。这给我们的程序带来了可乘之机。
+
+　我们先用浏览器登录，然后使用开发者工具查看cookie。接着在程序中携带该cookie向网站发送请求，就能让你的程序假扮成刚才登录的那个浏览器，得到只有登录后才能看到的页面。
+
+具体步骤：
+1.用浏览器登录，获取浏览器里的cookie字符串
+
+　　先使用浏览器登录。再打开开发者工具，转到network选项卡。在左边的Name一栏找到当前的网址，选择右边的Headers选项卡，查看Request Headers，这里包含了该网站颁发给浏览器的cookie。
+    对，就是后面的字符串。把它复制下来，一会儿代码里要用到。
+
+　　注意，最好是在运行你的程序前再登录。如果太早登录，或是把浏览器关了，很可能复制的那个cookie就过期无效了。
+
+
+
+# 1.　urllib库的版本：
+import sys
+import io
+from urllib import request
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') #改变标准输出的默认编码
+
+#登录后才能访问的网站
+url = 'http://i.mooc.chaoxing.com/space/index?t=1629012981145'
+
+#浏览器登录后得到的cookie，也就是刚才复制的字符串
+cookie_str = r'JSESSIONID=97E3FAD198739A1307A2C5C438FDC755; route=43bf1525b739b8a12eb52ada0519e7f2; uname=20180060328; lv=2; fid=417; _uid=93584343; uf=d9387224d3a6095b57f6a00623046dd1a66b68c14396959ebf2252b7413f732f4f2bb69c9ad946fc363a7c726f1df8dbd807a544f7930b6abeaaa6286f1f175409e23d860b2f693500726a3426cc7f6c2937e272a18018d90026cd2e725538d42e784bea1d9a260d; _d=1629012960131; UID=93584343; vc=10AC32A1C360C9DC0340763A79839EFC; vc2=C3EECE1D20AA338D6EA7B84ACFAC73C2; vc3=Er4ZHoLxLfRHcdA6SFPWIY%2BBQ5h7ioYNx1RSnXDqLyNtIYYYmDYZDwjebK2U7Q4XBzNGufNasg7kWVcvSsmYlPO56OL%2FlvJ0MREVBM8ge92EJBnLw7X9UoVlOjZb%2BlTxarItFoee3CAzRf42FqiTq%2BpZ3EGQdbiJFL4yk61Opdc%3Dad8a3fc5bdb7e1dff2cf0dd4123ad48b; xxtenc=2c01edb28abcea83aae83a9e88242115; DSSTASH_LOG=C_38-UN_175-US_93584343-T_1629012960133'
+
+req = request.Request(url)
+#设置cookie
+req.add_header('cookie', cookie_str)
+#设置请求头
+req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36')
+
+resp = request.urlopen(req)
+
+print(resp.read().decode('utf-8'))
+
+
+# 2.　requests库的版本：
+import requests
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') #改变标准输出的默认编码
+
+#登录后才能访问的网页
+url = 'http://i.mooc.chaoxing.com/space/index?t=1629012981145'
+
+#浏览器登录后得到的cookie，也就是刚才复制的字符串
+cookie_str = r'JSESSIONID=97E3FAD198739A1307A2C5C438FDC755; route=43bf1525b739b8a12eb52ada0519e7f2; uname=20180060328; lv=2; fid=417; _uid=93584343; uf=d9387224d3a6095b57f6a00623046dd1a66b68c14396959ebf2252b7413f732f4f2bb69c9ad946fc363a7c726f1df8dbd807a544f7930b6abeaaa6286f1f175409e23d860b2f693500726a3426cc7f6c2937e272a18018d90026cd2e725538d42e784bea1d9a260d; _d=1629012960131; UID=93584343; vc=10AC32A1C360C9DC0340763A79839EFC; vc2=C3EECE1D20AA338D6EA7B84ACFAC73C2; vc3=Er4ZHoLxLfRHcdA6SFPWIY%2BBQ5h7ioYNx1RSnXDqLyNtIYYYmDYZDwjebK2U7Q4XBzNGufNasg7kWVcvSsmYlPO56OL%2FlvJ0MREVBM8ge92EJBnLw7X9UoVlOjZb%2BlTxarItFoee3CAzRf42FqiTq%2BpZ3EGQdbiJFL4yk61Opdc%3Dad8a3fc5bdb7e1dff2cf0dd4123ad48b; xxtenc=2c01edb28abcea83aae83a9e88242115; DSSTASH_LOG=C_38-UN_175-US_93584343-T_1629012960133'
+
+#把cookie字符串处理成字典，以便接下来使用
+cookies = {}
+for line in cookie_str.split(';'):
+    key, value = line.split('=', 1)
+    cookies[key] = value
+
+#设置请求头
+headers = {'User-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36"}
+#在发送get请求时带上请求头和cookies
+resp = requests.get(url, headers = headers, cookies = cookies)
+print(f"statusCode = {resp.status_code}")
+print(resp.content.decode('utf-8'))
+
+
