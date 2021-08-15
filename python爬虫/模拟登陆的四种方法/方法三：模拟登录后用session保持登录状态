@@ -1,0 +1,44 @@
+#参考：https://www.cnblogs.com/chenxiaohan/p/7654667.html
+
+方法三：模拟登录后用session保持登录状态
+原理：
+　　session是会话的意思。和cookie的相似之处在于，它也可以让服务器“认得”客户端。
+  简单理解就是，把每一个客户端和服务器的互动当作一个“会话”。既然在同一个“会话”里，服务器自然就能知道这个客户端是否登录过。
+  
+ 
+import requests
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') #改变标准输出的默认编码
+
+#登录时需要POST的数据
+post_data = {
+    'loginType': "1",
+    'pwdOrVerifyCode': "hua14767512912",
+    'uaToken': "140#o4+d48UPzzW40Qo2Hx8zf3SDTcYwQHYVgwMwxqSbLAfXYulmdd+ocyE+Pear4A05BijcOu1Z9G7R94w5D/CZdRmVDb8UUxa1J0u/43hqzznkBDYek4SzzqbtijljUQzx2DD3VthqzFLeo0ipmTSdzPFvV25etFrz2fex9pJX7F+VJ2Y3ciSosPrVzznuZF+oQI3et35LzF352Eb5lRQDjDHvI29EuzHf282HD6e/zF242XTHl3GlziuiVllqlrMD6FZUU2+rPtrPHpcDm2nFEcvPE3meNeZifTh7e/8uXIhXClgNEK75eQI2+larCNsBVPYDIv+1TNauAO9Vu1rcae6HPLCWguS8JIJ14G6aOw5gVc3IpqIi9sts7fAjLnfYX5IpIeV1enveQlnl6tc5crLnpQsr7Q5j0W2i+KUi1D7qJpHp4jCI10J2ULz7GnTBXUxs3WCTMEVDuY78sL+2dqePQImJ1GPjdmVts3VnPsMBaNhP8m4Yv6httKWVf+METP2bjz6wifC80+QYSyUJeORSo3q5Ga3kuekaRaL0bOIUxFUYCa//DLm4FVApsFBQZf57ewFsNYx5rvGIf+c8OSq0R6pjYEt8AKv9ze6pSZUO3Da7Gpj8785MMCxn2wSaiqULcohrznbAFEvf1bj5DC93VIS3VvsGrY3NbpK0uu/Bm39qsOqo/gEAM7tXJDZWFJ6R3LY1Gq0DQuNMcGEt1uzIaSctP899mCaGSpuY1aiKs5xX40JxySl+DiPeqqfY5AuGiBlC60s63n5ePYUB2se5kevBycjusMSLIDZXSpXkBzWd+Rgh1ArXO0C1VKVPj/ywX46piPoynypkTzhvLQQREAOdVCkmoggb2vJo1Wiap1T+iSW3PLmQUYXClHLRQo5TAmJECqEEjDoVsq4D4X8yv+cm1//6gZ4EABX+9HRnk1d/WiGInmOPwCNvfdySwYi4hDTiw0giBwTSKqDFBY1XU5ooXGDLx3kO0VZzHyNMEnOJrUSmRYPVt37gNbYkM6zIi0/PSMxgTFSum4qSeIh1CSsQe0Tf088/xZ1bw+V15jQM2kNyRrAPRj2wA2EVHjSEaT+5lereo5P5lgJWD0WMtqr30aTA6/AUBhMK6DYE0UpakBx/vVcuMwpZDNBQyVeEuTwPYr1eezvCr4zFlcAYRP9ikGgchnobb5ugVVzDe9jODntCKB/HLeNPLiKF1rWng5+xUwmwmCv2YQ608WwGlucj080UHcdXE4ecp3kdnmQjMgBClVp7bmnfgZ4ZRaxyTgywQ07WI+jiKBl/07WKmOlYTMxJt81ywmHs8jQ02Jp4PRJmH7aHuLkrVGB/Pvl6mxwLyA4hdgek/U74oxslEEyIx+TTty4bURCmRDHl3lElBC51c/8fxsYTk2aiiyQkS/DBhCGwAcmS0gEWXfmN65xvxOmFAqN58ZgZKvIN0DGCNDqPeiUEJ1apPGShcJNINpFc9vyt9F+qGRt3lQ4/VVhOdMRuTWMMMDRhCQSUeKvbsPEI7+70p8rtp855SQ2JaS6/jiffla5rwZ7Xq7KSTdD5g8F4XMzz9iihbHg5PtKq3YgYaEGqEmc7boXkoUtOap61tWz8nSpuvVxXNM4sheqVDZpBWbFwhGG0y+uFIk3hK49pawzShRXaHl2GkDsm1kTtydeKxg5s4n9eCyxNBYDoZIRMJsy7iCIRzcj/oSulOSsgtlP9z/eR/x/cWIhN2ZDw7m7XQjnKoegOUx0B3sXtmC0MhIFZy4Vb26VVlLf0wQr=",
+    'userIdentification': "14767512912",
+    'webUmidToken': "T2gA6sxfIKFU_pOZoa07pVcUMgf_M2Y41EVeonsJA8hkyLy2x8y3EGC5NT7Gd64AoPU=",
+}
+
+#设置请求头
+headers = {'User-agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'}
+
+#登录时表单提交到的地址（用开发者工具可以看到）
+login_url ='https://passport.csdn.net/v1/register/pc/login/doLogin'
+
+#构造Session
+session = requests.Session()
+
+#在session中发送登录请求，此后这个session里就存储了cookie
+#可以用print(session.cookies.get_dict())查看
+resp = session.post(login_url, post_data)
+print(f"statusCode = {resp.status_code}")
+#登录后才能访问的网页
+url ='https://i.csdn.net/#/wallet/index?spm=1008.2221.3001.5136'
+
+#发送访问请求
+resp = session.get(url)
+print(f"statusCode = {resp.status_code}")
+# print(resp.content.decode('utf-8'))
+
