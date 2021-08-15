@@ -1,0 +1,52 @@
+1.正则解析:就是通过正则匹配定位到要获取数据的标签,获取响应的数据
+    [a-z] // 匹配所有的小写字母 
+    [A-Z] // 匹配所有的大写字母 
+    [a-zA-Z] // 匹配所有的字母 
+    [0-9] // 匹配所有的数字 
+    [0-9\.\-] // 匹配所有的数字，句号和减号 
+    [ \f\r\t\n] // 匹配所有的白字符
+    
+    用 findall() 方法查找，'\S' 表示提取所有的非空白字符，re.S表示换行提取，返回的是列表
+    # 用正则提取所有的可见字符
+        intro = re.findall('\S', intro, re.S)
+        
+2.xpath的表达式:是一种用来定位标签的层级关系的一中表达式
+
+
+3.BeautifulSoup解析
+BeautifulSoup知识点:
+    根据标签名查找:
+    soup.a   只能查找第一符合要求的标签
+    
+    获取属性:
+    soup.a.attrs    获取所有属性和属性值,返回一个字典
+    soup.a.attrs["href"]    获取href属性
+    soup.a["href"]    也可以简写成这种形式
+  
+    获取内容
+    soup.a.string
+    soup.a.text
+    soup.a.get_text()
+    注意,如果标签还有标签,那么string获取到的结果为None,而其他两个,可以获取文本内容
+    
+    find:找到第一个 符合要求的标签
+    soup.find("a")   找到第一个符合要求的
+    soup.find("a", title="xuexue")
+    soup.find("a", alt="xuexue")
+    soup.find("a", class="xuexue")
+    soup.find("a", id="xuexue")
+    
+    find_all:找到所有符合 要求的标签
+    soup.find_all("a")
+    soup.find_all(["a","b"])   # 找到所有的a标签和b标签
+    soup.find_all("a", limit=2)  # 限制前两个
+    
+    根据选择器选择指定的内容
+    select:soup.select("#feng")
+    常见的选择器:标准选择器(a),类选择器(.),id选择器(#),层级选择器
+    层级选择器:
+    div.xuexue #xiaoxue.haha .hehe   下面好多级
+    div>p>a>.xuexue   只能是下面一级
+    注意:select选择器返回的 永远是列表,需要通过下标提取指定的对象
+    
+    
