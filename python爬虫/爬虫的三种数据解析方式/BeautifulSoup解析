@@ -1,0 +1,47 @@
+
+import requests
+from bs4 import BeautifulSoup
+# 指定响应头
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+}
+
+
+# 定义解析内容的函数
+def parse_content(url):
+    # 获取标题正文页数据
+    page_text = requests.get(url=url, headers=headers).text
+    # 实例化一个BeautifulSoup对象
+    soup = BeautifulSoup(page_text, "lxml")
+    # 解析获得标签
+    element = soup.find("div", class_="chapter_content")
+    content = element.text  # 获取标签中的数据值
+    return content
+
+if __name__ == '__main__':
+    url = "http://www.shicimingju.com/book/sanguoyanyi.html"
+    # 发送请求后的响应体
+    response = requests.get(url=url, headers=headers)
+    response.encoding = 'utf-8'
+    page_text = response.text
+    # print(page_text)
+
+    # 创建soup对象
+    soup = BeautifulSoup(page_text, "lxml")
+    # 解析数据
+    a_else = soup.select(".book-mulu>ul>li>a")
+    # print(a_else)
+    cap = 1
+    for ele in a_else:
+        print("开始下载di%s章节" % cap)
+        cap += 1
+        title = ele.string
+        content_url = "http://www.shicimingju.com" + ele["href"]
+        content = parse_content(content_url)
+        print(content)
+        content = content.replace("\xa0", "")
+
+        # 持久化存储
+        with open("./mengsanguo.txt", "w",encoding='utf-8') as fp:
+            fp.write(title + ":" + content + "\n\n\n\n\n")
+            print("结束下载第%s章节" % cap)
