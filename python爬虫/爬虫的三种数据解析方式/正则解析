@@ -1,0 +1,37 @@
+
+# 1,正则解析:就是通过正则匹配定位到要获取数据的标签,获取响应的数据
+import requests
+import re
+import os
+if __name__ == '__main__':
+    # 访问请求的url
+    url = "https://www.qiushibaike.com/pic/page/%s/"
+    # 定制请求头
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+    }
+    # 指定其实和结束页码
+    page_start = input("请输入起始页码:")
+    page_end = input("请输入结束页码:")
+    # 创建文件夹
+    if not os.path.exists("images"):
+        os.mkdir("images")
+    # 循环解析且下载指定页码中的图片数据
+    for page in range(int(page_start), int(page_end)+1):
+        print("第%s页图片正在下载" % page)
+        new_url = format(url % page)
+        response = requests.get(url=new_url, headers=headers)
+
+        # 解析response中的图片链接
+        e = '<div class="thumb">.*?<img src="(.*?)".*?>.*?</div>'
+        pa = re.compile(e, re.S)
+        image_urls = pa.findall(response.text)
+        # 循环下载该页码下的多有url图片数据
+        for image_url in image_urls:
+            image_url = "https:" + image_url
+            image_name = image_url.split("/")[-1]
+            image_path = "images/" + image_name
+            image_data = requests.get(url=image_url, headers=headers).content
+            # 存储到本地
+            with open(image_path, "wb") as fp:
+                fp.write(image_data)
