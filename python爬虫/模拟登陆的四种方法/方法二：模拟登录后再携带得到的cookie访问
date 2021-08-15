@@ -1,0 +1,54 @@
+参考;https://www.cnblogs.com/chenxiaohan/p/7654667.html
+方法二：模拟登录后再携带得到的cookie访问
+原理：
+　　我们先在程序中向网站发出登录请求，也就是提交包含登录信息的表单（用户名、密码等）。
+  从响应中得到cookie，今后在访问其他页面时也带上这个cookie，就能得到只有登录后才能看到的页面。
+
+具体步骤：
+1.找出表单提交到的页面
+　　还是要利用浏览器的开发者工具。转到network选项卡，并勾选Preserve Log（重要！）。在浏览器里登录网站。
+    然后在左边的Name一栏找到表单提交到的页面。怎么找呢？看看右侧，转到Headers选项卡。首先，在General那段，Request Method应当是POST。
+    其次最下方应该要有一段叫做Form Data的，里面可以看到你刚才输入的用户名和密码等。也可以看看左边的Name，如果含有login这个词，有可能就是提交表单的页面（不一定！）。
+    
+    
+
+import requests
+import re
+class login():
+    def __init__(self):  # 初始化参数
+        self.headers = {
+            'User-Agent': 'Opera/9.80 (Macintosh; Intel Mac OS X; U; en) Presto/2.6.30 Version/10.61'
+        }
+
+    def get_cookies(self):  # 通过seesion获取到cookies并返回出来（cookiejar格式）
+        url = 'https://passport.csdn.net/v1/register/pc/login/doLogin'
+        session = requests.session()
+        post_data = {
+            'loginType': "1",
+            'pwdOrVerifyCode': "hua14767512912",
+            'uaToken': "140#o4+d48UPzzW40Qo2Hx8zf3SDTcYwQHYVgwMwxqSbLAfXYulmdd+ocyE+Pear4A05BijcOu1Z9G7R94w5D/CZdRmVDb8UUxa1J0u/43hqzznkBDYek4SzzqbtijljUQzx2DD3VthqzFLeo0ipmTSdzPFvV25etFrz2fex9pJX7F+VJ2Y3ciSosPrVzznuZF+oQI3et35LzF352Eb5lRQDjDHvI29EuzHf282HD6e/zF242XTHl3GlziuiVllqlrMD6FZUU2+rPtrPHpcDm2nFEcvPE3meNeZifTh7e/8uXIhXClgNEK75eQI2+larCNsBVPYDIv+1TNauAO9Vu1rcae6HPLCWguS8JIJ14G6aOw5gVc3IpqIi9sts7fAjLnfYX5IpIeV1enveQlnl6tc5crLnpQsr7Q5j0W2i+KUi1D7qJpHp4jCI10J2ULz7GnTBXUxs3WCTMEVDuY78sL+2dqePQImJ1GPjdmVts3VnPsMBaNhP8m4Yv6httKWVf+METP2bjz6wifC80+QYSyUJeORSo3q5Ga3kuekaRaL0bOIUxFUYCa//DLm4FVApsFBQZf57ewFsNYx5rvGIf+c8OSq0R6pjYEt8AKv9ze6pSZUO3Da7Gpj8785MMCxn2wSaiqULcohrznbAFEvf1bj5DC93VIS3VvsGrY3NbpK0uu/Bm39qsOqo/gEAM7tXJDZWFJ6R3LY1Gq0DQuNMcGEt1uzIaSctP899mCaGSpuY1aiKs5xX40JxySl+DiPeqqfY5AuGiBlC60s63n5ePYUB2se5kevBycjusMSLIDZXSpXkBzWd+Rgh1ArXO0C1VKVPj/ywX46piPoynypkTzhvLQQREAOdVCkmoggb2vJo1Wiap1T+iSW3PLmQUYXClHLRQo5TAmJECqEEjDoVsq4D4X8yv+cm1//6gZ4EABX+9HRnk1d/WiGInmOPwCNvfdySwYi4hDTiw0giBwTSKqDFBY1XU5ooXGDLx3kO0VZzHyNMEnOJrUSmRYPVt37gNbYkM6zIi0/PSMxgTFSum4qSeIh1CSsQe0Tf088/xZ1bw+V15jQM2kNyRrAPRj2wA2EVHjSEaT+5lereo5P5lgJWD0WMtqr30aTA6/AUBhMK6DYE0UpakBx/vVcuMwpZDNBQyVeEuTwPYr1eezvCr4zFlcAYRP9ikGgchnobb5ugVVzDe9jODntCKB/HLeNPLiKF1rWng5+xUwmwmCv2YQ608WwGlucj080UHcdXE4ecp3kdnmQjMgBClVp7bmnfgZ4ZRaxyTgywQ07WI+jiKBl/07WKmOlYTMxJt81ywmHs8jQ02Jp4PRJmH7aHuLkrVGB/Pvl6mxwLyA4hdgek/U74oxslEEyIx+TTty4bURCmRDHl3lElBC51c/8fxsYTk2aiiyQkS/DBhCGwAcmS0gEWXfmN65xvxOmFAqN58ZgZKvIN0DGCNDqPeiUEJ1apPGShcJNINpFc9vyt9F+qGRt3lQ4/VVhOdMRuTWMMMDRhCQSUeKvbsPEI7+70p8rtp855SQ2JaS6/jiffla5rwZ7Xq7KSTdD5g8F4XMzz9iihbHg5PtKq3YgYaEGqEmc7boXkoUtOap61tWz8nSpuvVxXNM4sheqVDZpBWbFwhGG0y+uFIk3hK49pawzShRXaHl2GkDsm1kTtydeKxg5s4n9eCyxNBYDoZIRMJsy7iCIRzcj/oSulOSsgtlP9z/eR/x/cWIhN2ZDw7m7XQjnKoegOUx0B3sXtmC0MhIFZy4Vb26VVlLf0wQr=",
+            'userIdentification': "14767512912",
+            'webUmidToken': "T2gA6sxfIKFU_pOZoa07pVcUMgf_M2Y41EVeonsJA8hkyLy2x8y3EGC5NT7Gd64AoPU=",
+        }
+        r = session.post(url, headers=self.headers, data=post_data)
+        print(f"statusCode = {r.status_code}")
+        # print(r.content.decode('utf-8'))
+        cookie = r.cookies
+        return cookie
+
+    def parse(self, cookie):
+        url = 'https://i.csdn.net/#/wallet/index?spm=1008.2221.3001.5136'
+        cookies_dict = requests.utils.dict_from_cookiejar(cookie)   #使用utils.dict_from_cookiejar 将cookies数据类型转化为字典
+        # 在发送get请求时带上请求头和cookies
+        resp = requests.get(url, headers=self.headers, cookies=cookies_dict)
+        print(f"statusCode = {resp.status_code}")
+
+    def run(self):
+        cookie = self.get_cookies()
+        self.parse(cookie)
+
+
+if __name__ == '__main__':
+    start = login()
+    start.run()
+
