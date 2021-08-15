@@ -1,0 +1,46 @@
+参考：https://www.cnblogs.com/chenxiaohan/p/7654667.html#four
+
+方法四：使用无头浏览器访问
+特点：
+　　功能强大，几乎可以对付任何网页，但会导致代码效率低
+
+原理：
+　如果能在程序里调用一个浏览器来访问网站，那么像登录这样的操作就轻而易举了。
+  在Python中可以使用Selenium库来调用浏览器，写在代码里的操作（打开网页、点击……）会变成浏览器忠实地执行。
+  这个被控制的浏览器可以是Firefox，Chrome等，但最常用的还是PhantomJS这个无头（没有界面）浏览器。
+  也就是说，只要把填写用户名密码、点击“登录”按钮、打开另一个网页等操作写到程序中，PhamtomJS就能确确实实地让你登录上去，并把响应返回给你。
+
+具体步骤：
+1.安装selenium库、PhantomJS浏览器
+
+2.在源代码中找到登录时的输入文本框、按钮这些元素
+
+　　因为要在无头浏览器中进行操作，所以就要先找到输入框，才能输入信息。找到登录按钮，才能点击它。
+
+　　在浏览器中打开填写用户名密码的页面，将光标移动到输入用户名的文本框，右键，选择“审查元素”，就可以在右边的网页源代码中看到文本框是哪个元素。
+    同理，可以在源代码中找到输入密码的文本框、登录按钮。
+    
+  
+#   QQ空间模拟登陆
+from selenium import webdriver
+from time import sleep
+bro=webdriver.Chrome(executable_path='./chromedriver')
+bro.get('https://i.qq.com/')
+bro.switch_to.frame('login_frame')   #内容在嵌套网页之中，需转换到嵌套网页
+a_tag=bro.find_element_by_id('switcher_plogin')
+a_tag.click()
+#定位到名称输入和密码输入
+username=bro.find_element_by_id('u')
+password=bro.find_element_by_id('p')
+#输入到输入框中的值
+sleep(1)
+username.send_keys('1515768305')
+sleep(1)
+password.send_keys('12345678')
+sleep(1)
+#点击登录按钮
+btn=bro.find_element_by_id('login_button')
+btn.click()
+sleep(3)
+bro.quit()
+
