@@ -15,6 +15,16 @@ score = ms.cross_val_score(
 )
 np.average(score)
 
+其中，scoring='accuracy' # 指标名称有：
+精准度(accuracy): 分类正确的样本数/总样本数
+
+查准率(precision_weighted): 针对每一类别, 预测正确的样本数 / 预测出来的样本数
+
+召回率(recall_weighted): 针对每一类别, 预测正确的样本数 / 实际存在的样本数
+
+f1得分(f1_weighted): 2x查准率x召回率/(查准率+召回率)
+
+
 1 简单的交叉验证
 (1) 从全部的训练数据 S中随机选择 中随机选择 s的样例作为训练集 train，剩余的 作为测试集 作为测试集 test。
 (2) 通过对测试集训练 ，得到假设函数或者模型 。
