@@ -1,7 +1,7 @@
 
 针对经验风险最小化算法的过拟合的问题，给出交叉验证的方法，这个方法在做分类问题时很常用
 
-交叉验证：
+交叉验证代码实现：
 import sklearn.model_selection as ms
 import numpy as np
 # 使用给出的模型,针对输入与输出进行5次交叉验证
@@ -23,6 +23,15 @@ np.average(score)
 召回率(recall_weighted): 针对每一类别, 预测正确的样本数 / 实际存在的样本数
 
 f1得分(f1_weighted): 2x查准率x召回率/(查准率+召回率)
+
+
+交叉验证的应用：
+参考;https://blog.csdn.net/dinkwad/article/details/78647273?
+1.交叉验证可以用来确定模型的参数
+2.检视过拟合
+3.用于模型的选择
+4.用于特征选择
+
 
 
 1 简单的交叉验证
