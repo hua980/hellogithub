@@ -31,9 +31,11 @@ F1-score: 2*TP/(2*TP + FP + FN)
   
 
 5、ROC曲线
-  ROC（Receiver Operating Characteristic）曲线是以假正率（FP_rate）和真正率（TP_rate）为轴的曲线，ROC曲线下面的面积我们叫做AUC
+  ROC（Receiver Operating Characteristic）横坐标为假正率（FPR），纵坐标为真正率（TPR），ROC曲线下面的面积我们叫做AUC
   (1)真正类率(True Postive Rate)TPR: TP/(TP+FN),代表分类器预测的正类中实际正实例占所有正实例的比例。Sensitivity
   (2)假正类率(False Postive Rate)FPR: FP/(FP+TN)，代表分类器预测的正类中实际负实例占所有负实例的比例。1-Specificity
+  ROC曲线越陡，那么模型的性能就越好
+  
   
   
   
