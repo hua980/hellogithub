@@ -1,0 +1,40 @@
+
+机器学习的模型评价指标：准确率(Precision)、召回率(Recall)、F值(F-Measure)、ROC曲线等
+
+对于数据测试结果有下面4种情况：
+TP: 预测为正， 实现为正
+FP: 预测为正， 实现为负
+FN: 预测为负，实现为正
+TN: 预测为负， 实现为负
+
+精确率： TP/ (TP+FP) 
+召回率： TP(TP + FN)
+F1-score: 2*TP/(2*TP + FP + FN) 
+
+
+1、准确率（Accuracy）
+  就是被分对的样本数除以所有的样本数  （TP+TN）/(TP+TN+FP+FN)
+
+
+2、精确率（Precision）
+  它表示的是预测为正的样本中有多少是对的。那么预测为正就有两种可能了，一种就是把正类预测为正类(TP)，另一种就是把负类预测为正类(FP)。
+  TP/ (TP+FP) 
+  
+
+3、召回率（recall）
+  它表示的是样本中的正例有多少被预测正确了。那也有两种可能，一种是把原来的正类预测成正类(TP)，另一种就是把原来的正类预测为负类(FN)
+  召回率是覆盖面的度量，度量有多个正例被分为正例，recall=TP/(TP+FN)。
+  
+  
+4、f1-score（F-Measure（又称为F-Score） F-Measure是Precision和Recall加权调和平均：）
+  F1的计算：F1-score = 2 ∗ Precision ∗ Recall / (Precision + Recall)
+  
+
+5、ROC曲线
+  ROC（Receiver Operating Characteristic）曲线是以假正率（FP_rate）和真正率（TP_rate）为轴的曲线，ROC曲线下面的面积我们叫做AUC
+  (1)真正类率(True Postive Rate)TPR: TP/(TP+FN),代表分类器预测的正类中实际正实例占所有正实例的比例。Sensitivity
+  (2)假正类率(False Postive Rate)FPR: FP/(FP+TN)，代表分类器预测的正类中实际负实例占所有负实例的比例。1-Specificity
+  
+  
+  
+  
