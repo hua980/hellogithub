@@ -1,4 +1,4 @@
-
+可参考学习：https://blog.csdn.net/lbweiwan/article/details/82725466 
 
 Apriori算法思想：
     1）找出所有的频集，这些项集出现的频繁性至少和预定义的最小支持度一样。
