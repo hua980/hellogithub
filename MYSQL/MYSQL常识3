@@ -32,6 +32,38 @@ from
 where a >= total/2 and b >= total/2  -- 正序逆序均大于整个数列数字个数的一半
 order by grade;
 
+五.求第几高，前几名
+第二高的薪水（注意limit的使用）
+    select distinct salary as SecondHighestSalary from Employee order by salary desc limit 1,1 
+    # IFNULL() 函数用于判断第一个表达式是否为 NULL,如果为 NULL 则返回第二个参数的值,如果不为 NULL 则返回第一个参数的值
+    select ifnull((
+          select distinct Salary from Employee
+          order by Salary desc limit N,1),null) as getNthHighestSalary
+          
+六、求连续出现3次的数字（MYSQL lag() 和lead()函数使用: https://blog.csdn.net/WHYbeHERE/article/details/109531867）
+该题使用LAG()和LEAD()的结果一样
+    SELECT DISTINCT Num as ConsecutiveNums
+    FROM(
+        SELECT Id,Num,
+        Lead(Num,1)OVER() as num_1, #选择指定行的向前一行的内容
+        Lead(Num,2)OVER() as num_2  #选择指定行的向前两行的内容
+        FROM Logs
+    ) as c
+    WHERE c.Num = c.num_1 AND c.num_1 = c.num_2 #这三个数都要相等。
+
+    select distinct Num as ConsecutiveNums
+    from(
+        select Num,
+        lag(Num,1) over(order by Id desc) as last1,
+        lag(Num,2) over(order by Id desc) as last2
+        from Logs
+    ) as t
+    where Num = last1 and last1= last2
+
+或者用三表连接（自连接）
+    select distinct a.Num as ConsecutiveNums
+    from Logs as a,Logs as b,Logs as c
+    where a.Num=b.Num and b.Num=c.Num and a.id=b.id-1 and b.id=c.id-1;
 
 
 
