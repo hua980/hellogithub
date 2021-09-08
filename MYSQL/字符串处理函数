@@ -1,5 +1,16 @@
 参考：https://blog.csdn.net/weixin_42373127/article/details/88991807
 
+笔试重点：
+  字符串截取：SUBSTRING()
+  语法：SUBSTRING(col, pos, len)
+  col：待截取的字段，字符类型；
+  pos：截取的起点，INT类型；
+  len：截取的长度，INT类型
+  
+  字符串拼接：CONCAT()
+  语法：CONCAT(str1, str2, str3,…)
+  str1，str2，str3：需要拼接的字符串，字符类型
+
 字符串函数
 1、LOWER(column|str)
 将字符串参数值转换为全小写字母后返回
