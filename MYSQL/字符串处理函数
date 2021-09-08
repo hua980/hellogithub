@@ -9,7 +9,7 @@
 将字符串参数值转换为全大写字母后返回
 例2： SELECT upper(‘SQL Course’) ;
 
-3、CONCAT(column|str1, column|str2,…)
+3、CONCAT(column|str1, column|str2,…)    ----重点
 将多个字符串参数首尾相连后返回
 例3： SELECT concat(‘My’, ‘S’, ‘QL’);
 
@@ -31,7 +31,7 @@
 如果省略则一直取到字符串的末尾。该函数是函数SUBSTRING()的同义词。len为负值表示从源字符串的尾部开始取起
 例8：SELECT substring(‘hello world’,5);
 
-SELECT substring(‘hello world’,5,3);
+SELECT substring(‘hello world’,5,3);  -----重点
 
 SELECT substring(‘hello world’,-5);
 
